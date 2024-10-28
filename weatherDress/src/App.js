@@ -1,3 +1,4 @@
+// Import styled-components
 import { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -13,7 +14,7 @@ function App() {
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}`;
   const hambuger = '/img/hambuger.png';
-  const mainImage = '/img/main.png'; // Path to your main.png
+  const mainImage = '/img/main.png';
 
   const searchWeather = async (e) => {
     if (e.key === 'Enter') {
@@ -88,7 +89,12 @@ function App() {
         </SearchContainer>
 
         {/* Display main image only if there's no weather result */}
-        {!result.main && <MainImage src={mainImage} alt="Main" />}
+        {!result.main && (
+          <>
+            <MainImage src={mainImage} alt="Main" />
+            {error && <ErrorText>{error}</ErrorText>}
+          </>
+        )}
 
         {/* Show the weather results if available */}
         {result.main && (
@@ -117,23 +123,20 @@ function App() {
               </select>
             </OpinionWrap>
 
-            {error && <div className='error'>{error}</div>}
-            {result.main && (
-              <WeatherBoxContainer>
-                <WeatherBox>
-                  <div className='label'>Feels Like</div>
-                  <div className='value'>{kelvinToCelsius(result.main.feels_like)} °C</div>
-                </WeatherBox>
-                <WeatherBox>
-                  <div className='label'>Wind</div>
-                  <div className='value'>{result.wind?.speed} m/s</div>
-                </WeatherBox>
-                <WeatherBox>
-                  <div className='label'>Humidity</div>
-                  <div className='value'>{result.main.humidity} %</div>
-                </WeatherBox>
-              </WeatherBoxContainer>
-            )}
+            <WeatherBoxContainer>
+              <WeatherBox>
+                <div className='label'>Feels Like</div>
+                <div className='value'>{kelvinToCelsius(result.main.feels_like)} °C</div>
+              </WeatherBox>
+              <WeatherBox>
+                <div className='label'>Wind</div>
+                <div className='value'>{result.wind?.speed} m/s</div>
+              </WeatherBox>
+              <WeatherBox>
+                <div className='label'>Humidity</div>
+                <div className='value'>{result.main.humidity} %</div>
+              </WeatherBox>
+            </WeatherBoxContainer>
           </>
         )}
       </div>
@@ -143,6 +146,7 @@ function App() {
 
 export default App;
 
+// Styles
 const AppWrap = styled.div`
   width: 100vw;
   height: 100vh;
@@ -166,7 +170,13 @@ const AppWrap = styled.div`
 const MainImage = styled.img`
   width: 100%;
   height: auto;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+`;
+
+const ErrorText = styled.div`
+  color: #f9f9f9;
+  font-size: 1.3em;
+  margin-top: 3px;
 `;
 
 const SearchContainer = styled.div`
