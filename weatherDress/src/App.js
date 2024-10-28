@@ -1,5 +1,4 @@
-// Import styled-components
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -11,6 +10,11 @@ function App() {
   const [message, setMessage] = useState("");
   const [imageSrc, setImageSrc] = useState("");
   const [localDate, setLocalDate] = useState("");
+
+  // Opinion counters
+  const [thinCount, setThinCount] = useState(0);
+  const [accurateCount, setAccurateCount] = useState(0);
+  const [thickCount, setThickCount] = useState(0);
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}`;
   const hambuger = '/img/hambuger.png';
@@ -33,8 +37,6 @@ function App() {
 
   const kelvinToCelsius = (kelvin) => (kelvin - 273.15).toFixed(2);
 
-  const accuratePer = "Accurate";
-
   const setWeatherMessage = (data) => {
     const temp = kelvinToCelsius(data.main.temp);
     let img = '';
@@ -42,19 +44,19 @@ function App() {
 
     if (temp >= 28) {
       img = '/img/sticky.png';
-      tempMessage = "It's CRAZY";
+      tempMessage = "It's CRAZY😱";
     } else if (temp >= 21) {
       img = '/img/shortSleeve.png';
-      tempMessage = "It's HOT";
+      tempMessage = "It's HOT🌞";
     } else if (temp >= 16) {
       img = '/img/warm.png';
-      tempMessage = "It's chilly";
+      tempMessage = "It's chilly😎";
     } else if (temp >= 5) {
       img = '/img/cold.png';
-      tempMessage = "It's cold";
+      tempMessage = "It's cold🤧";
     } else {
       img = '/img/freezing.png';
-      tempMessage = "It's freezing cold";
+      tempMessage = "It's freezing cold🥶";
     }
 
     setImageSrc(img);
@@ -73,10 +75,34 @@ function App() {
     return localTime.toLocaleDateString(undefined, options);
   };
 
+  // Reset opinion counts every hour
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setThinCount(0);
+      setAccurateCount(0);
+      setThickCount(0);
+    }, 60 * 60 * 1000);
+
+    return () => clearInterval(intervalId); // Cleanup on component unmount
+  }, []);
+
+  // Update opinion count based on selection
+  const updateOpinionCount = (selected) => {
+    if (selected === "It's thin") setThinCount((prev) => prev + 1);
+    else if (selected === "It's accurate👍") setAccurateCount((prev) => prev + 1);
+    else if (selected === "It's thick") setThickCount((prev) => prev + 1);
+  };
+
+  // Determine the most selected opinion
+  const getMostSelected = () => {
+    if (thinCount >= accurateCount && thinCount >= thickCount) return "It's thin";
+    if (accurateCount >= thinCount && accurateCount >= thickCount) return "It's accurate👍";
+    return "It's thick";
+  };
+
   return (
     <AppWrap>
       <div className='appContentWrap'>
-        {/* Always show hamburger and search bar */}
         <SearchContainer>
           <Hambuger src={hambuger} alt="Hamburger Icon" />
           <SearchInput
@@ -88,7 +114,6 @@ function App() {
           />
         </SearchContainer>
 
-        {/* Display main image only if there's no weather result */}
         {!result.main && (
           <>
             <MainImage src={mainImage} alt="Main" />
@@ -96,7 +121,6 @@ function App() {
           </>
         )}
 
-        {/* Show the weather results if available */}
         {result.main && (
           <>
             <DateDisplay>{localDate}</DateDisplay>
@@ -106,8 +130,7 @@ function App() {
                 <img src={imageSrc} alt="Outfit" />
               </WeatherCircle>
               <AccurateCircle>
-                <div className='title'>It's</div>
-                <div>{accuratePer}</div>
+                <div>{getMostSelected()}</div>
               </AccurateCircle>
             </WeatherCircleContainer>
 
@@ -115,10 +138,10 @@ function App() {
 
             <OpinionWrap>
               <span>I think</span>
-              <select>
+              <select onChange={(e) => updateOpinionCount(e.target.value)}>
                 <option>...</option>
                 <option>It's thin</option>
-                <option>It's accurate</option>
+                <option>It's accurate👍</option>
                 <option>It's thick</option>
               </select>
             </OpinionWrap>
@@ -145,6 +168,7 @@ function App() {
 }
 
 export default App;
+
 
 // Styles
 const AppWrap = styled.div`
