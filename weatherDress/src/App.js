@@ -151,7 +151,7 @@ const AppWrap = styled.div`
   align-items: center;
   padding: 10px;
   margin-top: 55px;
-  background-color: #7FC8F8;
+  background-color: #1E90FF;
   font-family: "Roboto", sans-serif;
 
   .appContentWrap {
