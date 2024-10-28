@@ -10,20 +10,10 @@ function App() {
   const [message, setMessage] = useState("");
   const [imageSrc, setImageSrc] = useState("");
   const [localDate, setLocalDate] = useState("");
-<<<<<<< HEAD
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-  </style>
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}`;
-
-=======
-  const [isWeatherVisible, setIsWeatherVisible] = useState(false); // State to control visibility
-
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}`;
->>>>>>> your-feature-branch
   const hambuger = '/img/hambuger.png';
+  const mainImage = '/img/main.png'; // Path to your main.png
 
   const searchWeather = async (e) => {
     if (e.key === 'Enter') {
@@ -33,17 +23,9 @@ function App() {
         setError(null);
         setWeatherMessage(data);
         setLocalDate(getLocalDate(data.timezone));
-<<<<<<< HEAD
       } catch (err) {
         setError("Could not fetch weather data. Please check the city name.");
         setResult({});
-=======
-        setIsWeatherVisible(true); // Show weather info after successful search
-      } catch (err) {
-        setError("Could not fetch weather data. Please check the city name.");
-        setResult({});
-        setIsWeatherVisible(false); // Hide weather info on error
->>>>>>> your-feature-branch
       }
     }
   };
@@ -59,43 +41,19 @@ function App() {
 
     if (temp >= 28) {
       img = '/img/sticky.png';
-<<<<<<< HEAD
-<<<<<<< HEAD
       tempMessage = "It's CRAZY";
-=======
-      tempMessage = "It's CRAZY😱";
->>>>>>> 7b2a7d98383bcd5bc41c7fbe157a7fc69898f108
     } else if (temp >= 21) {
       img = '/img/shortSleeve.png';
-      tempMessage = "It's HOT😎";
+      tempMessage = "It's HOT";
     } else if (temp >= 16) {
       img = '/img/warm.png';
-      tempMessage = "It's chilly🌞";
+      tempMessage = "It's chilly";
     } else if (temp >= 5) {
       img = '/img/cold.png';
-      tempMessage = "It's cold🤧";
+      tempMessage = "It's cold";
     } else {
       img = '/img/freezing.png';
-<<<<<<< HEAD
       tempMessage = "It's freezing cold";
-=======
-      tempMessage = "It's CRAZY😱";
-    } else if (temp >= 21) {
-      img = '/img/shortSleeve.png';
-      tempMessage = "It's HOT😎";
-    } else if (temp >= 16) {
-      img = '/img/warm.png';
-      tempMessage = "It's chilly🌞";
-    } else if (temp >= 5) {
-      img = '/img/cold.png';
-      tempMessage = "It's cold🤧";
-    } else {
-      img = '/img/freezing.png';
-      tempMessage = "It's freezing cold🥶";
->>>>>>> your-feature-branch
-=======
-      tempMessage = "It's freezing cold🥶";
->>>>>>> 7b2a7d98383bcd5bc41c7fbe157a7fc69898f108
     }
 
     setImageSrc(img);
@@ -117,67 +75,7 @@ function App() {
   return (
     <AppWrap>
       <div className='appContentWrap'>
-<<<<<<< HEAD
-
-       
-      <SearchContainer>
-        <Hambuger src={hambuger} alt="Hamburger Icon" />
-        <SearchInput
-          placeholder='Enter the City'
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          type='text'
-          onKeyDown={searchWeather}
-        />
-      </SearchContainer>
-        
-
-        <DateDisplay>{localDate}</DateDisplay>
-
-        
-        <WeatherCircleContainer>
-        <WeatherCircle>
-          <img src={imageSrc} alt="Outfit" />
-        </WeatherCircle>
-        <AccurateCircle>
-          <div className='title'>It's</div>
-          <div>{accuratePer}</div>
-        </AccurateCircle>
-        </WeatherCircleContainer>        
-
-        <Message>{message}</Message>
-
-        <OpinionWrap>
-          <span>I think</span>
-          <select>
-            <option>...</option>
-            <option>It's thin</option>
-            <option>It's accurate</option>
-            <option>It's thick</option>
-          </select>
-        </OpinionWrap>
-
-       
-
-
-
-        {error && <div className='error'>{error}</div>}
-        {result.main && (
-          <WeatherBoxContainer>
-            <WeatherBox>
-              <div className='label'>Feels Like</div>
-              <div className='value'>{kelvinToCelsius(result.main.feels_like)} °C</div>
-            </WeatherBox>
-            <WeatherBox>
-              <div className='label'>Wind</div>
-              <div className='value'>{result.wind?.speed} m/s</div>
-            </WeatherBox>
-            <WeatherBox>
-              <div className='label'>Humidity</div>
-              <div className='value'>{result.main.humidity} %</div>
-            </WeatherBox>
-          </WeatherBoxContainer>
-=======
+        {/* Always show hamburger and search bar */}
         <SearchContainer>
           <Hambuger src={hambuger} alt="Hamburger Icon" />
           <SearchInput
@@ -188,14 +86,15 @@ function App() {
             onKeyDown={searchWeather}
           />
         </SearchContainer>
-        
-        {/* Display main.png when no location is searched */}
-        {!isWeatherVisible && <MainImage src='/img/main.png' alt='Main' />}
 
-        {/* Display weather info only after a successful search */}
-        {isWeatherVisible && location && (
+        {/* Display main image only if there's no weather result */}
+        {!result.main && <MainImage src={mainImage} alt="Main" />}
+
+        {/* Show the weather results if available */}
+        {result.main && (
           <>
             <DateDisplay>{localDate}</DateDisplay>
+
             <WeatherCircleContainer>
               <WeatherCircle>
                 <img src={imageSrc} alt="Outfit" />
@@ -204,7 +103,7 @@ function App() {
                 <div className='title'>It's</div>
                 <div>{accuratePer}</div>
               </AccurateCircle>
-            </WeatherCircleContainer>       
+            </WeatherCircleContainer>
 
             <Message>{message}</Message>
 
@@ -236,7 +135,6 @@ function App() {
               </WeatherBoxContainer>
             )}
           </>
->>>>>>> your-feature-branch
         )}
       </div>
     </AppWrap>
@@ -252,13 +150,8 @@ const AppWrap = styled.div`
   justify-content: center;
   align-items: center;
   padding: 10px;
-  margin-top :55px;
-<<<<<<< HEAD
-  background-color:#7FC8F8;
-=======
-  background-color:#1E90FF;
-  // background-color:#7FC8F8;
->>>>>>> your-feature-branch
+  margin-top: 55px;
+  background-color: #7FC8F8;
   font-family: "Roboto", sans-serif;
 
   .appContentWrap {
@@ -267,10 +160,14 @@ const AppWrap = styled.div`
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    
   }
 `;
 
+const MainImage = styled.img`
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+`;
 
 const SearchContainer = styled.div`
   display: flex;
@@ -280,7 +177,7 @@ const SearchContainer = styled.div`
 `;
 
 const Hambuger = styled.img`
-  width: 28px; 
+  width: 28px;
   height: 28px;
   margin-right: 10px;
 `;
@@ -292,21 +189,14 @@ const SearchInput = styled.input`
   border: 1px solid #f9f9f9;
 `;
 
-<<<<<<< HEAD
-=======
-const MainImage = styled.img`
-  width: 250px; // Adjust the width as needed
-  height: auto; // Maintain the aspect ratio
-  margin-top: 20px; // Add some spacing
-`;
->>>>>>> your-feature-branch
-
 const DateDisplay = styled.div`
   font-size: 1.2em;
-    width: 260px ;
-  height: auto;
-  margin-top: 20px; 
-rent element 
+  margin-top: 20px;
+  color: #f9f9f9;
+`;
+
+const WeatherCircleContainer = styled.div`
+  position: relative;
   width: 260px;
   height: 260px;
   margin: 10px auto;
@@ -319,7 +209,7 @@ const WeatherCircle = styled.div`
   overflow: hidden;
   background-color: #cfebf7;
 
-  .img {
+  img {
     width: 75%;
     height: 75%;
     object-fit: cover;
@@ -329,12 +219,12 @@ const WeatherCircle = styled.div`
 `;
 
 const AccurateCircle = styled.div`
-  width: 75px; 
+  width: 75px;
   height: 75px;
   border-radius: 50%;
   background-color: #f9f9f9;
   position: absolute;
-  bottom: -8px; 
+  bottom: -8px;
   right: -8px;
   display: flex;
   flex-direction: column;
@@ -346,7 +236,6 @@ const AccurateCircle = styled.div`
     text-align: center;
   }
 `;
-
 
 const Message = styled.div`
   font-size: 1.4em;
@@ -366,10 +255,8 @@ const OpinionWrap = styled.div`
     border-radius: 8px;
     width: 150px;
     height: 40px;
-    
   }
 `;
-
 
 const WeatherBoxContainer = styled.div`
   display: flex;
@@ -386,7 +273,6 @@ const WeatherBox = styled.div`
   border-radius: 8px;
   text-align: center;
   background-color: #f3fafd;
-  
 
   .label {
     font-size: 0.75em;
@@ -395,6 +281,6 @@ const WeatherBox = styled.div`
 
   .value {
     font-size: 0.95em;
-    margin-top:15px;
+    margin-top: 15px;
   }
 `;
